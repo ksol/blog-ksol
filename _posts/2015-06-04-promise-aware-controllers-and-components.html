@@ -1,0 +1,55 @@
+---
+layout:     post
+title:      "Promise-aware controllers and components with Ember.js"
+date:       2015-06-02 12:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-06.jpg"
+---
+
+<p>
+  When building a web application, whether server- or client-rendered, it is pretty common to display a spinner for UI sections that might take some time to load.
+</p>
+
+<p>
+  Ember.js makes it pretty easy for us to achieve this: if you are fetching your data in your routes (as your should be) and returning promises from the <code>model</code> hook, an intermediate route (named <code>loading</code>) will be entered (and its template rendered) while the promise is resolved:
+</p>
+
+<p>
+  <a class="jsbin-embed" href="http://emberjs.jsbin.com/dugonahudi/1/embed?html,js,console,output">See example on emberjs.jsbin.com</a>
+</p>
+
+<script src="http://static.jsbin.com/js/embed.js"></script>
+
+<p>
+  This substate is also available for nested routes: when <code>AppPostCommentsIndexRoute</code> is fetching its model, <code>AppPostCommentsLoadingRoute</code> will be entered and the template <code>post/comments/loading</code> will be rendered.
+</p>
+
+<p>
+  While very useful, there's one frequent use-case not covered with those substates. What if there is several components in your interface, each backed by data coming from a different source? You will need to handle the spinners independently, and that is not something you can do with the route substates.
+</p>
+
+<p>
+  To the rescue, <code>Ember.PromiseProxyMixin</code>! This mixin makes any subclasse of ObjectProxy, ObjectController or ArrayControllers promise-aware, according to the docs. When you include this mixin in one of your controllers, all you need to do is set a <code>promise</code> property on it. Then, you can use various properties such as <code>isSettled</code>, <code>isFulfilled</code>, <code>isRejected</code>, <code>isPending</code>... If the promise succeeds, the <code>content</code> property will be set. And if the promise rejects, the <code>reason</code> property will be filled with the error.
+</p>
+
+<p>
+  Best part? It works with components too! Though the docs does not mention them, I have yet to encounter an issue when using this mixin in my components. See for yourself:
+</p>
+
+<p>
+  <a class="jsbin-embed" href="http://emberjs.jsbin.com/zaresafifu/1/embed?html,js,output">See example on emberjs.jsbin.com</a>
+</p>
+
+<script src="http://static.jsbin.com/js/embed.js"></script>
+
+<p>
+  As you can see, pretty straightforward. Make sure you do <strong>not</strong> return a promise from your route, otherwise the <code>loading</code> substate will be entered. One downside is that you cannot choose the name of the properties: you have to stick with <code>promise</code> and <code>content</code>, and the latter is not the most semantic of names. You can always make an alias of this is really an issue, though.
+</p>
+
+<p>
+  If you are using this mixin with controllers, one issue you will probably encounter is that wether your component is top-level (and linked to the route) or instantiated using <code>{{render}}</code> or with <code>itemController</code>, Ember will by default fill the <code>content</code> property. In those cases, you will need to override <code>init</code> in your controller, set <code>promise</code> to the value of <code>content</code> and clear <code>content</code>.
+</p>
+
+<p>
+  I hope this post was useful. If you have anything to add, please leave a comment or hit me up on twitter (@ksol) !
+</p>

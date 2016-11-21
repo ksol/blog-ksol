@@ -1,0 +1,101 @@
+---
+layout:     post
+title:      "Ember Data: working with custom API endpoints"
+date:       2015-10-21 07:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-04.jpg"
+---
+
+<p>
+  I recently wrote about how you can use URL templates when it comes to <a href="http://blog.ksol.fr/ember-data-working-with-nested-api-resources/">working with nested API resources</a>.
+</p>
+
+<p>
+  Today, I'll explore how you can work around another of Ember Data's shortcomings: reaching custom endpoints (eg. <code>/posts/favorites</code>). And once again, we'll leverage URL templates.
+</p>
+
+<p>
+  <em>Before I go further: I suggest reading the <a href="http://blog.ksol.fr/ember-data-working-with-nested-api-resources/">article mentioned above</a> to learn more about URL templates and the <a href="https://github.com/amiel/ember-data-url-templates">ember-cli addon</a> we'll be using.</em>
+</p>
+
+<p>
+  <em>And once again, code samples were extracted from real-life projects, but edited for the purpose of this article, and may not work exactly as is: they're here mainly to give some substance to the concepts explored.</em>
+</p>
+
+<h2 id="fetchingobjects">Fetching object(s)</h2>
+
+<p>
+  Let's assume our API has two endpoints: <code>/posts</code> that returns all the posts there is, and <code>/posts/favorites</code> that returns only the favorites.
+</p>
+
+<p>
+  If you remember, the methods used to filled the <code>urlSegments</code> are given a few arguments: <code>type</code>, <code>id</code>, <code>snapshot</code>, and <code>query</code>. That last one, <code>query</code>, seems a good candidate for passing our custom endpoint around.
+</p>
+
+<p>
+  This means we will end up calling something like <code>store.query('post', {endpoint: favorites})</code>, which doesn't look bad. Since we're actually querying our API to return a subset of all posts, using <code>store.query</code> is semantically appropriate. A straightforward implementation could be the following:
+</p>
+
+<script src="https://gist.github.com/ksol/36001fe6cf7b582de5c4.js"></script>
+
+<p>
+  If your endpoint returns only a single object instead of an array, you can use <code>store.queryRecord</code> and follow the same logic.
+</p>
+
+<h2 id="customactionsonobjectsusingput">Custom actions on objects (using PUT)</h2>
+
+<p>
+  Now, let's assume our API allows us to upvote and downvote posts, using <code>PUT /post/:id/upvote</code> and <code>PUT /post/:id/downvote</code>. Wouldn't it be nice to be able to call <code>post.upvote()</code> or <code>post.downvote()</code>, and get a promise as return value just as you would with <code>post.save()</code>?
+</p>
+
+<p>
+  In order to do this, we are going to hijack <code>save()</code>! On a persisted record, the corresponding adapter method is <code>updateRecord</code>, so we are going to change its  URL template.
+</p>
+
+<p>
+  <em>I'm assuming you will never call <code>upvote</code>/<code>downvote</code> on a record that is not yet persisted, but on a real project you should handle this scenario and prevent those actions from happening.</em>
+</p>
+
+<p>
+  Let's start by defining our methods on our model. We need to store the actual endpoint somewhere, then make the call to <code>save()</code>:
+</p>
+
+<script src="https://gist.github.com/ksol/32fabbc6ad8aa8fbf068.js"></script>
+
+<p>
+  I opted to store the endpoint in a private-ish property on the model that gets nullified first-thing once the operation completes.
+</p>
+
+<p>
+  Then, when building our URL in the adapter, we need to check if the property exists on the snapshot and react accordingly:
+</p>
+
+<script src="https://gist.github.com/ksol/65105f267a8f075bb501.js"></script>
+
+<p>
+  And that's it. With this, we can now make domain methods and use them exactly like <code>save()</code> !
+</p>
+
+<h2 id="customactionsonobjectsusinganyhttpverb">Custom actions on objects (using any HTTP verb)</h2>
+
+<p>
+  But what if our custom actions require another HTTP verb? Since <code>RESTAdapter.updateRecord</code> always uses <code>PUT</code>, our only option here is to rewrite this method so that we can supply a custom HTTP verb.
+</p>
+
+<p>
+  Assuming our <code>upvote</code>/<code>downvote</code> endpoints are reached with <code>POST</code> instead of <code>PUT</code>, our solution would now look like this:
+</p>
+
+<script src="https://gist.github.com/ksol/c5730bfe50094adca56b.js"></script>
+
+<p>
+  Now there is no limitations on the kind of domain methods that can be defined on our models.
+</p>
+
+<p>
+  While the <code>RESTAdapter</code> is pretty stable, you need to be careful when updating Ember Data that the reference implementation of <code>updateRecord</code> has not changed from the one you are specifically using, otherwise you may end up breaking things.
+</p>
+
+<p>
+  What did you think about this?
+</p>

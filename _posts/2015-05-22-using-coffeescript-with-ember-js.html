@@ -1,0 +1,55 @@
+---
+layout:     post
+title:      "Using CoffeeScript with Ember.js and ember-cli"
+date:       2015-05-22 12:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-04.jpg"
+---
+
+<p>
+  For quite some time now, <a href="http://emberjs.com">Ember.js</a> has been betting on the future by adopting ES2015 features, first by using modules and later by allowing developers to use other features via the <a href="http://babeljs.io">Babel</a> project.
+</p>
+
+<p>
+  However, some developers are more comfortable with <a href="http://coffeescript.org">CoffeeScript</a>, either because they are used to it or because their project was started in CoffeeScript and they do not want to change. For example, if your project started with ember-rails, it is probably made with CoffeeScript.
+</p>
+
+<p>
+  There is also a good chance that at some point you will have to use <a href="http://www.ember-cli.com">ember-cli</a>, the now official way of doing ember projects. Why? Because not doing so would make it harder to use third-party libraries (distributed as <a href="http://www.emberaddons.com">ember-cli addons</a>), getting help, or joining a project.
+</p>
+
+<p>
+  Luckily, it is pretty easy to use CoffeeScript with ember-cli if your version is recent enough. All you need to do is <code>ember install ember-cli-coffeescript</code> from within your project, and you now have full support for CoffeeScript. Beware, though: if you are used to Ruby on Rails conventions, your filenames must end in <code>.coffee</code> and not <code>.js.coffee</code>.
+</p>
+
+<p>
+  There is one thing you need to pay attention to: CoffeeScript does not support ES2015 modules. Since it allows us to embed pure javascript using backticks, this is not a blocker, and our files will end up looking like this:
+</p>
+
+<script src="https://gist.github.com/ksol/98d350a18bdf079d7607.js"></script>
+
+<p>
+  CoffeeScript's classes are not compatible with the ember object model, but aside from this detail, you can use all the features you are used to.
+</p>
+
+<h3 id="anoteonemberscriptandothertranspilers">A note on EmberScript (and other transpilers)</h3>
+
+<p>
+  <a href="http://emberscript.com">EmberScript</a> is a project that gives you a language with a syntax almost identical to CoffeeScript, but with some additions and changes in order to fully support Ember. You can use the <code>class</code> keyword, and there is shortcuts for computed properties and observers, for instance.
+</p>
+
+<p>
+  While it looks interesting, I never used it and I do not think I will, for the same reasons I am staying away from <a href="http://emblemjs.com">Emblem.js</a> and opting out of CoffeeScript whenever possible.
+</p>
+
+<p>
+  Those languages are nice, but the main problem they aim to solve is verbose syntax, which is not that much a problem: there is a good chance you can solve it through your editor via code completion and automatic-linting.
+</p>
+
+<p>
+  Moreover, they come at a price: when using one of them, you are now dependent of another component, one that may end up having trouble catching up with the latests versions of Ember.js/handlebars or worse, completely unmaintained.
+</p>
+
+<p>
+  While unlikely for CoffeeScript, it is not far fetched for EmberScript or Emblem. You should always weight the pros and cons before bringing another tool/component in your stack, especially the cost of opting out.
+</p>

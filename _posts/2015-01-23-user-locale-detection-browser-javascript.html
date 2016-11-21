@@ -1,0 +1,98 @@
+---
+layout:     post
+title:      "User locale detection in the browser with javascript"
+date:       2015-01-23 13:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-02.jpg"
+---
+
+<p>
+  Internationalization and localization are common topics in web development, and no matter what language or framework you are using, the mechanisms are often similar:
+</p>
+
+<ol>
+  <li>Use "keys" throughout your application instead of your localized content (<code>gettext</code> uses the content as key, which can be confusing);</li>
+  <li>Find out which locale the user want;</li>
+  <li>For each key, find the matching content in that locale (or a fallback one if missing).</li>
+</ol>
+
+<p>
+  In upcoming articles, I'll address step 1 and 3 and how to implement them with Ember.js. In this article however, I will focus on finding the correct locale in the context of client-side web applications in general, not limited to a specific framework.
+</p>
+
+<h2 id="letuserschoose">Let users choose</h2>
+
+<p>
+  If your application is localized, you should <strong>always</strong> allow your users to set which locale they want.
+</p>
+
+<p>
+  How you store this information depends on the context: you can use a cookie or <code>localeStorage</code>, insert the locale in the URL, or you can store it somewhere on your backend. But remember to make the locale available as soon as possible so that all your requests to your API can include a correct <code>Accept-Language</code> header (assuming your API is localized, too).
+</p>
+
+<p>
+  If you are not storing the locale on the client, at least use a <code>data</code>-attribute that allows your client-side code to find it without having to make an API call.
+</p>
+
+<p>
+  When your user has not manually set a locale, you can either use a default one (probably english) or try to guess the most appropriate one.
+</p>
+
+<p>
+  The latter can be achieved in many ways, but remember that none of those are perfect and fully reliable: a user can use the computer of a friend, or may be traveling... <strong>Always</strong> allow your users to override the locale you set for them.
+</p>
+
+<h2 id="iplookup">IP lookup</h2>
+
+<p>
+  The user IP address can be looked up and mapped to a country. This has to be done server-side though, requires using a service like <a href="http://geoiptool.com">GeoIP</a>, and in some cases (VPN, proxy, firewalls...) is not reliable.
+</p>
+
+<h2 id="acceptlanguageheader">Accept-Language header</h2>
+
+<p>
+  Your browser automatically adds a header <code>Accept-Language</code> with a value of the kind: <code>fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4,es;q=0.2,de;q=0.2</code>. This is a list of locales with a "quality" indicator which you can use to find the most appropriate locale.
+</p>
+
+<p>
+  Sadly, this also requires server-side code. The <a href="https://localizejs.com/">localize.js</a> javascript library uses a little trick: it makes an API call with a response reflecting this header.
+</p>
+
+<p>
+  You can use the same trick, but remember the request may take time. You can also use a <code>data</code>-attribute in your first response, thus avoiding an extra request.
+</p>
+
+<h2 id="navigatorlanguages">navigator.language(s)</h2>
+
+<p>
+  The <code>navigator</code> object has a <code>language</code> property that reflects the language of the browser. While useful (and part of <a href="https://developer.mozilla.org/en-US/docs/Web/API/NavigatorLanguage">a spec</a>), browser support is a source of confusion and errors:
+</p>
+
+<ul>
+  <li>Internet Explorer (&lt; 11) uses <code>navigator.systemLanguage</code> (and <code>navigator.userLanguage</code>, and <code>navigator.browserLanguage</code>...);</li>
+  <li>Some browsers return a locale string (<code>en-US</code>), some a language string (<code>en</code>).</li>
+</ul>
+
+<p>
+  There is also a second property, <code>navigator.languages</code>, which is an array of locale (or language) strings. It matches the value of the <code>Accept-Language</code>, and is ordered by the "quality" parameter. It is only supported by Chrome (32+) and Firefox (32+).
+</p>
+
+<p>
+  I tested each of those properties on different browsers and here's the recap:
+</p>
+
+<script src="https://gist.github.com/ksol/62b489572944ca70b4ba.js"></script>
+
+<p>
+  Lately, I have used this snippet to get the language string and so far it has been reliable:
+</p>
+
+<script src="https://gist.github.com/ksol/d1b9481c6ea8bcc9828f.js"></script>
+
+<p>
+  I hope you found this article useful. Next ones will cover the different ways to internationalize (and localize) your ember.js apps.
+</p>
+
+<p>
+  If you have anything to add on this topic, please hit the comments, send me an email, or ping me on twitter.
+</p>

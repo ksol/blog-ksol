@@ -1,0 +1,49 @@
+---
+layout:     post
+title:      "Ruby: decorate methods with .method_added"
+date:       2015-10-14 12:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-02.jpg"
+---
+
+<p>
+  If you have been using Ruby (or Rails) long enough, you've probably encountered something like this :
+</p>
+
+<script src="https://gist.github.com/ksol/25958899d28bf8e5f839.js"></script>
+
+<p>
+  Projects such as <a href="http://whatisthor.com">thor</a> and <a href="http://www.ruby-grape.org">grape</a> make heavy use of those constructs, but they're far from being the only ones.
+</p>
+
+<p>
+  I always wondered how this was achieved, so the other day I finally decided to crack it open, and it turns out it is pretty easy.
+</p>
+
+<p>
+  It all boils down to one method, <code>Module.method_added</code>: this "hook" is called each time a method is defined on its caller:
+</p>
+
+<script src="https://gist.github.com/ksol/7d49878c09ec01662983.js"></script>
+
+<p>
+  First, you have to define class methods that mainly serves to keep track of your methods' metadata (or decorations, or annotations; call it as you see fit). Then, in <code>method_added</code>, you do all the processing you need, and do not forget to clean the metadata at the end.
+</p>
+
+<p>
+  Our previous example is pretty straightforward. What if we wanted to decorate our methods, as in Python? Here goes:
+</p>
+
+<script src="https://gist.github.com/ksol/2aa776366da13a8881be.js"></script>
+
+<p>
+  I do not know what the impact on performance is though, so you might want to check that before using this in production apps.
+</p>
+
+<p>
+  If you are into decorators, you should check <a href="https://github.com/michaelfairley/method_decorators">michaelfairley/method_decorators</a>, which includes commonly-used decorators and provides a starting point for your own.
+</p>
+
+<p>
+  If you have feedback or questions, please leave a comment, send me a mail, of hit me up on twitter.
+</p>

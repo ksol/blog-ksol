@@ -1,0 +1,23 @@
+# Site settings
+title: One Headlight
+header-img: img/home-bg.jpg
+email: contact@ksol.fr
+copyright_name: Kevin Soltysiak
+description: "Write your site description here. It will be used as your sites meta description as well!"
+url: "http://blog.ksol.fr"
+twitter_username: ksol
+github_username:  ksol
+email_username:  contact@ksol.fr
+permalink: /:title/
+
+# Google Analytics
+# To enable google analytics, uncomment below line with a valid Google Tracking ID
+google_tracking_id: "UA-10150863-4"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+
+gems: [jekyll-paginate, jekyll-feed]

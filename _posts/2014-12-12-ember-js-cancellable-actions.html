@@ -1,0 +1,49 @@
+---
+layout:     post
+title:      "Ember.js: cancellable actions"
+date:       2014-12-12 16:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-02.jpg"
+---
+
+<p>
+  When a user of your application can do something that could be harmful or destructive, you need to make sure that it was not done by mistake. There are many UI patterns in use, the classic pop-up prompting you for your approval being the most known.
+</p>
+
+<p>
+  Since a few years, another pattern emerged: say you want to do something irreversible to an entity named <code>AwesomePossum</code>, you would have to type <code>AwesomePossum</code> in a text field before being allowed to proceed. This is used at <a href="http://www.github.com">GitHub</a> when you want to delete a repository, and at <a href="http://www.heroku.com">Heroku</a> and <a href="http://www.appsdeck.eu">Appsdeck</a> when you want to delete one of your apps.
+</p>
+
+<p>
+  Yet another pattern is not to ask for confirmation <em>before</em> doing the action, but to allow the user to cancel/undo/revert it <em>afterwards</em>. <a href="https://mail.google.com">GMail</a> allows you to "undo" the sending of an email for a few seconds if you noticed you forgot something (an attachment, for instance).
+</p>
+
+<p>
+  I've recently implemented something similar in a web app with Ember.js. The web app is user by carriers and allows them to update the status of their current "mission". Each action that has an impact on the mission "lifecycle" can be cancelled for five seconds after the button was tapped (in order to avoid accidental taps).
+</p>
+
+<p>
+  In plain javascript, you would use <code>setTimeout</code> to achieve something like this. With Ember.js, it's better to hook into the "run loop". As written <a href="http://emberjs.com/guides/understanding-ember/run-loop/">in the docs</a>, "Ember's internals and most of the code you will write in your applications takes place in a run loop. The run loop is used to batch, and order (or reorder) work in a way that is most effective and efficient."
+</p>
+
+<p>
+  Ember gives us a method very similar to <code>setTimeout</code> with <code>Ember.run.later</code>. This method expects a callback and a delay, and returns what I call a "task id" that we can use to cancel the execution of the callback (unless it has already started) with <code>Ember.run.cancel</code>. So what I needed to do was wrap my actions with <code>Ember.run.later</code>, add a button that allows the user to cancel the action, and setup another action that handles the cancelling logic.
+</p>
+
+<p>
+  I did not stop there: I wanted the carrier to know in real-time how many time he had left to cancel the action. So, I added a property <code>currentWaitTime</code> that is set at the same moment the user starts an action that can be cancelled. There's an observer on this property: each time it changes, the observer schedules (via <code>Ember.run.later</code> once again) one second later the update of the property to itself, minus one. And so it goes, until its value is <code>0</code>.
+</p>
+
+<p>
+  All the code is at the end of this post and could very easily be turned into a <code>Mixin</code> and adapted to similar situations: handling more than one cancellable action at a time for instance; or starting the action right away, and only when the user cancels it, discard or revert it (depending on what is possible and makes sense).
+</p>
+
+<p>
+  I hope this was helpful. If you have any question or suggestions, please hit the comments below or ping me on <a href="https://twitter.com/ksol">twitter</a>.
+</p>
+
+<p>
+  <em>Note: this example was extracted from an existing ember-cli project. Some things were renamed, and some typos may have been introduced when writing this article.</em>
+</p>
+
+<script src="https://gist.github.com/ksol/db9118c38b0854da43ce.js"></script>

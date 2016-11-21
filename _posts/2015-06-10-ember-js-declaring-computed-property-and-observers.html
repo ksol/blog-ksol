@@ -1,0 +1,67 @@
+---
+layout:     post
+title:      "Ember.js: three ways to declare computed properties and observers"
+date:       2015-06-10 12:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-01.jpg"
+---
+
+<p>
+  In Ember.js, computed properties let you declare functions as properties. This is most useful when you have properties that depend on other properties: you create one by defining a computed property as a function, which Ember will automatically call when you ask for the property, and you supply which properties this function depends on.
+</p>
+
+<p>
+  You can then use it the same way you would any normal, "static" property. Computed properties will also observes the properties they depend on, and will be recomputed when they change. You no longer have to manually make sure everything is in sync.
+</p>
+
+<p>
+  In the same spirit, you can also declare observers: functions that will be called when the properties they observes change.
+</p>
+
+<p>
+  As of today, there is three different ways to declare computed properties/observers: via prototype extension, <code>Ember.computed</code>/<code>Ember.observer</code>, or using ES7 decorators.
+</p>
+
+<h3 id="functionprototypeextension">Function prototype extension</h3>
+
+<p>
+  This is probably the most known and most used way of declaring computed properties and observers. Ember.js "enhances" many javascript native objects such as <code>Array</code> or <code>Function</code> (yes, a function is an object in javascript) either for performance or syntactic reasons. One of those allows you to call <code>property</code> on a function to turn it into a computed property (or <code>observes</code> for an observer):
+</p>
+
+<script src="https://gist.github.com/ksol/37fedda82c6ab995b68a.js"></script>
+
+<p>
+  However, while still being used in the official guides, this way is no longer recommended. You might have seen that most examples by core team members uses another syntax...
+</p>
+
+<h3 id="embercomputedemberobserver"><code>Ember.computed</code> &amp; <code>Ember.observer</code></h3>
+
+<p>
+  You probably know <code>Ember.computed</code> mostly as a namespace for helpers such as <code>Ember.computed.alias</code> or <code>Ember.computed.none</code>, but it is first and foremost the function allowing you to declare a computed property.
+</p>
+
+<p>
+  Under the hood, the prototype extensions seen before calls <code>Ember.computed</code> for computed and <code>Ember.observer</code> for observers. This has always been the recommended syntax for third-party library authors, since they have no guarantee that prototype extensions will be enabled.
+</p>
+
+<script src="https://gist.github.com/ksol/d2ed38d8e40d49b8929f.js"></script>
+
+<p>
+  As of today, this is how you should write your computed properties and observers. That being said, if you like to experiment, read on.
+</p>
+
+<h3 id="es7decorators">ES7 decorators</h3>
+
+<p>
+  ES6 is far from being available in all browsers that ES7 is already being worked on. <a href="http://yehudakatz.com/about/">Yehuda Katz</a> has proposed a mechanism for decorators that you can read <a href="https://github.com/wycats/javascript-decorators">here</a>. I suggest you read it, but in short, it allows you to "annotate" your objects to "enhance" them.
+</p>
+
+<p>
+  An Ember CLI addon, <a href="https://github.com/rwjblue/ember-computed-decorators">ember-computed-decorators</a> allows you to test this today, thanks to <a href="http://babeljs.io">Babel</a>. Your computed properties/observers would know look like this:
+</p>
+
+<script src="https://gist.github.com/ksol/84503db96217655f0476.js"></script>
+
+<p>
+  I think this looks pretty great. It will take some time before the decorator proposal gets stabilized though, so I would not recommend using it in production apps today and keep using <code>Ember.computed</code> and <code>Ember.observer</code>. Just keep in mind that this might be the syntax we will be using in a few years :)
+</p>

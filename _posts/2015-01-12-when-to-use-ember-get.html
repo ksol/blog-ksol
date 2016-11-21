@@ -1,0 +1,47 @@
+---
+layout:     post
+title:      "Ember.js: when to use Ember.get (and Ember.set)"
+date:       2015-01-12 10:00:00
+author:     "Kevin Soltysiak"
+header-img: "img/post-bg-04.jpg"
+---
+
+<p>
+  Because of Ember's support for bindings and observers, accessing and setting properties on objects has to be done using the <code>get</code> and <code>set</code> methods, respectively. Most of the times, you will use <code>object.get('myproperty')</code> or something close to it. But in some cases, when reading code or libraries source, you may stumble upon <code>Ember.get(object, 'myproperty')</code> instead. What's the difference and when should you use one or the other?
+</p>
+
+<p>
+  When reading the source, you will see that <code>#get</code> is defined in the <code>Observable</code> mixin, and all the method does is call <code>Ember.get</code>, so that <code>object.get('myproperty')</code> will call <code>Ember.get(object, 'myproperty')</code>. Therefore, both will always be equal, and the same goes for <code>Ember.set</code>. But there is at least two scenarios where you may want to use <code>Ember.get</code> instead of calling <code>#get</code>:
+</p>
+
+<h4 id="plainoldjavascriptobject">Plain old javascript object</h4>
+
+<p>
+  You cannot call <code>#get</code> on objects that does not extend <code>Ember.Object</code> (or <code>Ember.Observable</code>). But <code>Ember.get</code> works on pure javascript objects, with the same semantics as <code>#get</code>:
+</p>
+
+<script src="https://gist.github.com/ksol/2f06ea681623eba322e7.js"></script>
+
+<p>
+  <code>Ember.set</code> works similarly, and allows you to set properties in pure javascript objects as if they were extending <code>Ember.Object</code>.
+</p>
+
+<h4 id="nullobjects">Null objects</h4>
+
+<p>
+  When called on <code>null</code>, using <code>Ember.get</code> instead of <code>#get</code> will return <code>undefined</code> instead of raising a <code>TypeError</code>. If you know and expect that your object might be <code>null</code>, this is probably what you want.
+</p>
+
+<p>
+  Be careful though: calling <code>Ember.get</code> with <code>undefined</code> will still raise an exception:
+</p>
+
+<script src="https://gist.github.com/ksol/9fa58d3ee44418971dd6.js"></script>
+
+<p>
+  <code>Ember.set</code> does not work with <code>null</code> objects, and this is probably why it is not as used as <code>Ember.get</code>.
+</p>
+
+<p>
+  If you have used <code>Ember.get</code> for other reasons than the two listed above, I would be glad to update this article. And as always, feel free to post any question or suggestions either in the comments below or on twitter.
+</p>
