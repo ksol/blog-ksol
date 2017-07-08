@@ -6,7 +6,6 @@ copyright_name: Kevin Soltysiak
 description: "Write your site description here. It will be used as your sites meta description as well!"
 url: "http://blog.ksol.fr"
 twitter_username: ksol
-github_username:  ksol
 email_username:  contact@ksol.fr
 permalink: /:title/
 paginate_path: "/page/:num/"
@@ -21,4 +20,6 @@ highlighter: rouge
 paginate: 5
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 
-gems: [jekyll-paginate, jekyll-feed]
+gems:
+  - jekyll-paginate
+  - jekyll-feed
