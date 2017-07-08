@@ -1,10 +1,11 @@
 ---
 layout:     post
 title:      "In-between caminos"
-date:       2017-07-01 18:00:00
+date:       2017-07-08 12:00:00
 header-img: "img/home-bg.jpg"
 categories: "camino-bizarro"
 subtitle:   "Filling the gap"
+index:      1
 ---
 
 ### November — December

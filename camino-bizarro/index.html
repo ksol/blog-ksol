@@ -1,0 +1,53 @@
+---
+layout:    story
+slug:      camino-bizarro
+title:     Camino Bizarro
+subtitle:  A story in three acts
+completed: false
+parts:     4
+---
+
+{% assign posts = site.posts | where:"categories",page.slug %}
+
+<article class="story-intro">
+  <div class="story-intro-stars"></div>
+    <p>
+      So, there I went again: another camino. The first one was such a great experience
+      that I just had to do one again.Back then, it was full of both novelty and surprises;
+      this time around, the former was pretty much gone... And that very well may be why
+      I had to force a little for the latter to happen.
+    </p>
+
+    {% unless page.completed %}
+      <p style="text-align:center;">
+        This story is <strong>not </strong>finished yet. More to come later...
+      </p>
+    {% endunless %}
+  <div class="story-intro-stars"></div>
+</article>
+
+{% for post in posts %}
+  <div class="story-heading">
+    <h2>{{ post.title }}</h2>
+
+    {% if post.subtitle %}
+      <h3 class="subheading">{{ post.subtitle }}</h3>
+    {% endif %}
+
+    <hr>
+  </div>
+
+  <article class="post-content">
+    {{ post.content }}
+  </article>
+
+  <hr>
+{% endfor %}
+
+{% unless page.completed %}
+  <p style="text-align:center;">
+    <em>
+      This story is <strong>not </strong>finished yet. More to come later...
+    </em>
+  </p>
+{% endunless %}

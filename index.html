@@ -13,6 +13,15 @@ description: "Everywhere is walking distance if you have the time"
 
     <p class="post-meta">
       {{ post.date | date: "%B %-d, %Y" }} {% if post.subtitle %} — {{ post.subtitle }} {% endif %}
+      {% if post.index %}
+        {% assign match = site.pages | where:"slug",post.categories.first %}
+        {% assign page = match.first %}
+        — Part {{ post.index }}{% if page.parts %}/{{page.parts}}{% endif %} of
+        <a href="{{ page.url | prepend: site.baseurl | replace: '//', '/' }}">
+          {{page.title}}
+        </a>
+        {% unless page.completed %}(ongoing){% endunless %}
+      {% endif %}
     </p>
   </div>
   <hr>

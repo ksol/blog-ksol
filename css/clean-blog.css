@@ -420,6 +420,26 @@ h1, .subheading {
   }
 }
 
-.post-content {
+.post-content, .story-intro {
   text-align: justify;
+}
+
+.story-intro {
+  font-style: italic;
+}
+
+.story-intro-stars:before {
+  content: "***";
+}
+
+.story-intro-stars {
+  text-align: center;
+}
+
+.story-heading h1,
+.story-heading h2,
+.story-heading h3,
+.story-heading .subheading {
+  text-shadow: none;
+  text-align: center;
 }
