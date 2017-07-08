@@ -1,10 +1,8 @@
 ---
 layout:     post
-title:      "A Change of Plans (2)"
+title:      "A Change of Plans (again)"
 date:       2017-07-01 18:00:00
-author:     "Kevin Soltysiak"
 header-img: "img/home-bg.jpg"
-subtitle: "yo"
 ---
 
 Once again, I am rebooting this blog. I've removed all the previous content, since it no longer had a place here. A clean slate, you could say.

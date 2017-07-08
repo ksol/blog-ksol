@@ -3,11 +3,12 @@ title: One Headlight
 header-img: img/home-bg.jpg
 email: contact@ksol.fr
 copyright_name: Kevin Soltysiak
-description: "Write your site description here. It will be used as your sites meta description as well!"
+description: Everywhere is walking distance if you have the time — stories and accounts of travels and hikes
 url: "http://blog.ksol.fr"
 twitter_username: ksol
 email_username:  contact@ksol.fr
-permalink: /:title/
+permalink: /:categories/:title
+
 paginate_path: "/page/:num/"
 
 # Google Analytics

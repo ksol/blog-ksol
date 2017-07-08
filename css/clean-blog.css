@@ -419,3 +419,7 @@ h1, .subheading {
     text-shadow: 1px 1px rgba(0, 0, 0, 0.8)
   }
 }
+
+.post-content {
+  text-align: justify;
+}
