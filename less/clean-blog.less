@@ -173,6 +173,7 @@ hr.small {
 		}
 	}
 	.site-heading,
+  .post-heading,
 	.page-heading {
 		text-align: center;
 		h1 {
@@ -184,7 +185,8 @@ hr.small {
 			line-height: 1.1;
 			display: block;
 			.sans-serif;
-			font-weight: 300;
+      font-style: italic;
+			font-weight: 400;
 			margin: 10px 0 0;
 		}
 		@media only screen and (min-width: 768px) {
@@ -463,4 +465,111 @@ img::-moz-selection {
 
 body {
 	webkit-tap-highlight-color: @brand-primary;
+}
+
+h1, .subheading {
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.8)
+}
+
+@media only screen and (min-width: 768px) {
+  .navbar a {
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.8)
+  }
+}
+
+.post-content, .story-intro {
+  text-align: justify;
+}
+
+.story-intro {
+  font-style: italic;
+}
+
+.story-intro-stars:before {
+  content: "***";
+}
+
+.story-intro-stars {
+  text-align: center;
+}
+
+.story-heading {
+  h1, h2, h3, .subheading {
+    text-shadow: none;
+    text-align: center;
+  }
+}
+
+.img-centered {
+  display: block;
+  margin: 0 auto;
+}
+
+.post-image {
+  font-size: 0;
+  margin-bottom: 15px;
+}
+
+.post-image img, .post-image video {
+  width: 100%;
+  max-width: 100%;
+}
+
+.post-image--split {
+  margin-right: -15px;
+  text-align: center
+}
+
+.post-image--split img {
+  width: ~"calc(50% - 22px)";
+  max-width: 435px;
+  margin-right: 15px;
+}
+
+.post-image--split .post-image-caption {
+  margin-right: 15px;
+}
+
+@media only screen and (max-width: 900px) {
+  .post-image--split img {
+    width: ~"calc(50% - 15px)";
+    max-width: none;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .post-image--split {
+    margin-right: 0;
+  }
+
+  .post-image--split img {
+    margin-right: 0;
+    width: 100%;
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .post-image--split .post-image-caption {
+    margin-top: -10px;
+    margin-right: 0;
+  }
+}
+
+.post-image-caption {
+  line-height: 18px;
+  vertical-align: middle;
+  font-size: 14px;
+  font-style: italic;
+  background: #f6f6f6;
+  padding: 15px 20px 13px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.post-image-caption p {
+  margin: 0;
+}
+
+.post-image-caption p+p {
+  margin-top: 15px;
 }
