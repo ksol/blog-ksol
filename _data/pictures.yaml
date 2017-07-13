@@ -1,5 +1,5 @@
 camino-bizarro:
-  first-part:
+  part-one:
     - argenton-bridge
     - argenton-creuse
     - argenton-nolo
@@ -19,3 +19,6 @@ camino-bizarro:
     - velles-house
     - velles-stadium
     - velles-to-argenton
+  part-two:
+  part-three:
+    - san-sebastian-from-above
