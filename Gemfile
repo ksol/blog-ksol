@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem "jekyll",          "3.4.3"
+ruby "2.7.1"
 
-gem "jekyll-paginate", "1.1.0"
-gem "jekyll-feed",     "0.9.2"
+gem "jekyll"
+gem "jekyll-paginate"
+gem "jekyll-feed"

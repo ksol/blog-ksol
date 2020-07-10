@@ -21,6 +21,6 @@ highlighter: rouge
 paginate: 5
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 
-gems:
+plugins:
   - jekyll-paginate
   - jekyll-feed
